@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Factory Empire Tycoon</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🏭 Factory Empire Tycoon</h1>
+    <nav>
+      <button onclick="showPage('factory')">Factory</button>
+      <button onclick="showPage('research')">Research Lab</button>
+      <button onclick="showPage('managers')">Managers</button>
+      <button onclick="showPage('world')">World Map</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Pages -->
+    <section id="factoryPage" class="page">
+      <h2>Factory Floor</h2>
+      <p>Current Product: <span id="currentProduct">Paper</span></p>
+      <p>Products Produced: <span id="productCount">0</span></p>
+      <button id="produceBtn" onclick="produce()">🛠️ Produce</button>
+      <br><br>
+      <button onclick="upgradeFactory()">🔼 Upgrade Factory (Cost: <span id="upgradeCost">10</span> 🪙)</button>
+      <p>Production Speed: <span id="productionSpeed">1</span> / click</p>
+    </section>
+
+    <section id="researchPage" class="page hidden">
+      <h2>Research Lab</h2>
+      <p>Research Points: <span id="researchPoints">0</span></p>
+      <button onclick="autoProductionResearch()">🔬 Unlock Auto Production (Cost: 50 RP)</button>
+    </section>
+
+    <section id="managersPage" class="page hidden">
+      <h2>Managers</h2>
+      <button onclick="hireManager()">🧑‍💼 Hire Manager (Cost: 100 🪙)</button>
+      <p id="managerStatus">No manager hired yet.</p>
+    </section>
+
+    <section id="worldPage" class="page hidden">
+      <h2>World Map</h2>
+      <p>🌍 Expand your business soon!</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
