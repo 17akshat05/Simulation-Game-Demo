@@ -1,96 +1,79 @@
-// Game state variables
-let money = 1000;
-let points = 0;
-let productionRate = 1;
-let level = 1;
-let progress = 0;
-let gameInterval;
-let countries = 1;
+// Variables
+let productCount = 0;
+let productionSpeed = 1;
+let upgradeCost = 10;
+let researchPoints = 0;
+let managerHired = false;
+let autoProductionUnlocked = false;
 
-function showPage(page) {
-  const pages = document.querySelectorAll('.page');
-  pages.forEach((pageElement) => {
-    pageElement.classList.remove('active');
-  });
-  document.getElementById(page).classList.add('active');
+// Pages handling
+function showPage(pageName) {
+  document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+  document.getElementById(pageName + 'Page').classList.remove('hidden');
 }
 
-function startGame() {
-  showPage('factory');
-  money = 0;
-  points = 0;
-  productionRate = 1;
-  level = 1;
-  progress = 0;
-  countries = 1;
-  updateUI();
+// Production
+function produce() {
+  productCount += productionSpeed;
+  updateDisplay();
 }
 
+// Factory Upgrade
 function upgradeFactory() {
-  if (money >= 100) {
-    money -= 100;
-    productionRate *= 2;
-    level += 1;
-    updateUI();
+  if (productCount >= upgradeCost) {
+    productCount -= upgradeCost;
+    productionSpeed += 1;
+    upgradeCost = Math.floor(upgradeCost * 1.5);
+    updateDisplay();
   } else {
-    alert('Not enough money!');
+    alert("Not enough products to upgrade!");
   }
 }
 
-function hireManager(level) {
-  const managerCost = [500, 2000, 5000];
-  const managerSpeed = [0.1, 0.25, 0.5];
-  if (money >= managerCost[level - 1]) {
-    money -= managerCost[level - 1];
-    productionRate += managerSpeed[level - 1];
-    updateUI();
+// Research - Unlock Auto Production
+function autoProductionResearch() {
+  if (researchPoints >= 50 && !autoProductionUnlocked) {
+    researchPoints -= 50;
+    autoProductionUnlocked = true;
+    setInterval(produce, 1000); // Auto produce every second
+    alert("Auto Production Unlocked!");
+    updateDisplay();
+  } else if (autoProductionUnlocked) {
+    alert("Already unlocked!");
   } else {
-    alert('Not enough money!');
+    alert("Not enough research points!");
   }
 }
 
-function researchUpgrade() {
-  if (money >= 1000) {
-    money -= 1000;
-    productionRate *= 2;
-    updateUI();
+// Managers
+function hireManager() {
+  if (productCount >= 100 && !managerHired) {
+    productCount -= 100;
+    managerHired = true;
+    setInterval(produce, 2000); // Extra production by manager every 2 seconds
+    document.getElementById('managerStatus').innerText = "Manager working 🚀";
+    updateDisplay();
+  } else if (managerHired) {
+    alert("You already have a manager!");
   } else {
-    alert('Not enough money!');
+    alert("Not enough products to hire a manager!");
   }
 }
 
-function expandWarehouse() {
-  if (money >= 5000) {
-    money -= 5000;
-    countries += 1;
-    document.getElementById('countries').innerText = `Current Countries: ${countries}`;
-    updateUI();
-  } else {
-    alert('Not enough money!');
-  }
+// Update all UI elements
+function updateDisplay() {
+  document.getElementById('productCount').innerText = productCount;
+  document.getElementById('productionSpeed').innerText = productionSpeed;
+  document.getElementById('upgradeCost').innerText = upgradeCost;
+  document.getElementById('researchPoints').innerText = researchPoints;
 }
 
-function earnPoints() {
-  points += 1;
-  document.getElementById('points').innerText = points;
-}
+// Earn Research Points every 10 seconds (passive)
+setInterval(() => {
+  researchPoints += 1;
+  updateDisplay();
+}, 10000);
 
-function updateUI() {
-  document.getElementById('money').innerText = money;
-  document.getElementById('productionRate').innerText = productionRate;
-  document.getElementById('level').innerText = level;
-  document.getElementById('progress').style.width = (progress % 100) + '%';
-  document.getElementById('earnInfo').innerText = `Earned Points: ${points}`;
-}
-
-function updateProgress() {
-  progress += productionRate;
-  if (progress >= 100) {
-    money += 10;
-    progress = 0;
-  }
-  updateUI();
-}
-
-// Automatically increase progress every second
-gameInterval = setInterval(updateProgress, 1000);
+// Start at Factory page
+showPage('factory');
+updateDisplay();
