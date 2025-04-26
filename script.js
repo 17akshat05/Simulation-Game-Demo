@@ -1,5 +1,5 @@
 // Game state variables
-let money = 0;
+let money = 1000;
 let points = 0;
 let productionRate = 1;
 let level = 1;
