@@ -1,126 +1,108 @@
-/* General Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Body */
 body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(to right, #d7d2cc, #304352);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  color: #333;
-}
-
-/* Header */
-header {
-  background: linear-gradient(to right, #141e30, #243b55);
-  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
   color: white;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+  margin: 0;
+  overflow: hidden;
 }
 
-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
-
-nav {
-  margin-top: 10px;
-}
-
-nav button {
-  margin: 5px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #1de9b6, #1dc4e9);
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-nav button:hover {
-  background: linear-gradient(135deg, #1dc4e9, #1de9b6);
-  transform: scale(1.05);
-}
-
-/* Main */
-main {
-  flex: 1;
-  padding: 30px;
+.page {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  z-index: 2;
+  position: relative;
 }
 
-/* Pages */
-.page {
-  background: white;
-  width: 90%;
-  max-width: 600px;
-  padding: 30px;
-  margin-top: 30px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  animation: pop 0.5s ease;
-  text-align: center;
-}
-
-/* Text */
-h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-/* Buttons */
-button {
-  background: linear-gradient(to right, #ff512f, #f09819);
-  border: none;
-  padding: 12px 24px;
-  margin: 10px;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: linear-gradient(to right, #f09819, #ff512f);
-  transform: scale(1.08);
-}
-
-/* Progress Bar */
-.progress-bar {
-  width: 100%;
-  background: #ddd;
-  border-radius: 20px;
-  overflow: hidden;
-  margin: 20px 0;
-}
-
-.progress {
-  height: 20px;
-  width: 0%;
-  background: linear-gradient(to right, #00c6ff, #0072ff);
-  transition: width 0.5s ease;
-}
-
-/* Hidden */
 .hidden {
   display: none;
 }
 
-/* Animation */
-@keyframes pop {
-  0% { transform: scale(0.9); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+button {
+  background: linear-gradient(to right, #ff416c, #ff4b2b);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  margin: 10px;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+h1, h2 {
+  margin-bottom: 20px;
+}
+
+.progress-container {
+  width: 80%;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  margin: 20px 0;
+  height: 30px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: linear-gradient(to right, #00f260, #0575e6);
+  height: 100%;
+  width: 0%;
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+.tap-section {
+  margin-top: 20px;
+}
+
+#tapButton {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  background: radial-gradient(circle, #ff512f, #f09819);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  cursor: pointer;
+  animation: pulse 2s infinite;
+}
+
+#tapButton:hover {
+  transform: scale(1.1);
+}
+
+.buttons-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#message {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #ffe600;
+  min-height: 30px;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 81, 47, 0.7); }
+  70% { box-shadow: 0 0 0 20px rgba(255, 81, 47, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 81, 47, 0); }
+}
+
+/* Fireworks Canvas */
+#fireworkCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
