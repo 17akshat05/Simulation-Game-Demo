@@ -5,54 +5,52 @@
   box-sizing: border-box;
 }
 
-/* Body Styling */
+/* Body */
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(to right, #d7d2cc, #304352);
-  color: #333;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  color: #333;
 }
 
 /* Header */
 header {
   background: linear-gradient(to right, #141e30, #243b55);
-  color: white;
   padding: 20px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  color: white;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
 }
 
 header h1 {
   font-size: 2.5rem;
-  letter-spacing: 1px;
+  margin-bottom: 10px;
 }
 
 nav {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 nav button {
-  margin: 8px;
-  padding: 12px 24px;
-  background: #00c6ff;
-  background: linear-gradient(to right, #0072ff, #00c6ff);
+  margin: 5px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #1de9b6, #1dc4e9);
   color: white;
-  border: none;
-  border-radius: 30px;
   font-weight: bold;
-  font-size: 16px;
-  transition: all 0.3s ease;
+  border: none;
+  border-radius: 25px;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
 nav button:hover {
-  background: linear-gradient(to right, #00c6ff, #0072ff);
+  background: linear-gradient(135deg, #1dc4e9, #1de9b6);
   transform: scale(1.05);
 }
 
-/* Main Area */
+/* Main */
 main {
   flex: 1;
   padding: 30px;
@@ -63,58 +61,66 @@ main {
 
 /* Pages */
 .page {
+  background: white;
   width: 90%;
   max-width: 600px;
-  background: white;
   padding: 30px;
-  margin: 20px auto;
+  margin-top: 30px;
   border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  animation: pop 0.5s ease;
   text-align: center;
 }
 
-.page h2 {
-  margin-bottom: 20px;
+/* Text */
+h2 {
   font-size: 2rem;
+  margin-bottom: 20px;
   color: #333;
 }
 
 /* Buttons */
 button {
-  padding: 14px 28px;
-  margin: 12px;
-  background: linear-gradient(to right, #ff6a00, #ee0979);
-  color: white;
+  background: linear-gradient(to right, #ff512f, #f09819);
   border: none;
-  border-radius: 25px;
-  font-size: 18px;
+  padding: 12px 24px;
+  margin: 10px;
+  color: white;
+  font-size: 16px;
   font-weight: bold;
+  border-radius: 30px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 button:hover {
-  background: linear-gradient(to right, #ee0979, #ff6a00);
+  background: linear-gradient(to right, #f09819, #ff512f);
   transform: scale(1.08);
 }
 
-/* Special Text */
-p, span {
-  font-size: 18px;
-  margin: 10px 0;
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  background: #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 20px 0;
 }
 
-/* Hidden Class */
+.progress {
+  height: 20px;
+  width: 0%;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  transition: width 0.5s ease;
+}
+
+/* Hidden */
 .hidden {
   display: none;
 }
 
-/* Animations */
+/* Animation */
 @keyframes pop {
   0% { transform: scale(0.9); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
-}
-
-.page {
-  animation: pop 0.5s ease;
 }
