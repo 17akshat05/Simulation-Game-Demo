@@ -1,79 +1,93 @@
-// Variables
-let productCount = 0;
-let productionSpeed = 1;
-let upgradeCost = 10;
-let researchPoints = 0;
-let managerHired = false;
-let autoProductionUnlocked = false;
+let money = 0;
+let level = 1;
+let productionRate = 1;
+let currentProduct = "Paper";
+let automationMultiplier = 1;
+let countries = 1;
 
-// Pages handling
-function showPage(pageName) {
-  document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-  document.getElementById(pageName + 'Page').classList.remove('hidden');
+const products = ["Paper", "Pencil", "Book", "Phone", "Car", "Rocket"];
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(page => {
+    page.classList.add('hidden');
+  });
+  document.getElementById(pageId).classList.remove('hidden');
 }
 
-// Production
-function produce() {
-  productCount += productionSpeed;
-  updateDisplay();
+function startGame() {
+  showPage('factory');
 }
 
-// Factory Upgrade
 function upgradeFactory() {
-  if (productCount >= upgradeCost) {
-    productCount -= upgradeCost;
-    productionSpeed += 1;
-    upgradeCost = Math.floor(upgradeCost * 1.5);
-    updateDisplay();
+  if (money >= 100) {
+    money -= 100;
+    level++;
+    if (level < products.length) {
+      currentProduct = products[level - 1];
+    }
+    productionRate += 2;
+    updateUI();
   } else {
-    alert("Not enough products to upgrade!");
+    alert("Not enough money!");
   }
 }
 
-// Research - Unlock Auto Production
-function autoProductionResearch() {
-  if (researchPoints >= 50 && !autoProductionUnlocked) {
-    researchPoints -= 50;
-    autoProductionUnlocked = true;
-    setInterval(produce, 1000); // Auto produce every second
-    alert("Auto Production Unlocked!");
-    updateDisplay();
-  } else if (autoProductionUnlocked) {
-    alert("Already unlocked!");
+function hireManager(type) {
+  let cost = 0;
+  let boost = 1;
+  if (type === 1) { cost = 500; boost = 1.1; }
+  if (type === 2) { cost = 2000; boost = 1.25; }
+  if (type === 3) { cost = 5000; boost = 1.5; }
+
+  if (money >= cost) {
+    money -= cost;
+    automationMultiplier *= boost;
+    updateUI();
+    alert("Manager hired!");
   } else {
-    alert("Not enough research points!");
+    alert("Not enough money!");
   }
 }
 
-// Managers
-function hireManager() {
-  if (productCount >= 100 && !managerHired) {
-    productCount -= 100;
-    managerHired = true;
-    setInterval(produce, 2000); // Extra production by manager every 2 seconds
-    document.getElementById('managerStatus').innerText = "Manager working 🚀";
-    updateDisplay();
-  } else if (managerHired) {
-    alert("You already have a manager!");
+function researchUpgrade() {
+  if (money >= 1000) {
+    money -= 1000;
+    automationMultiplier *= 2;
+    updateUI();
+    alert("Research Successful!");
   } else {
-    alert("Not enough products to hire a manager!");
+    alert("Not enough money!");
   }
 }
 
-// Update all UI elements
-function updateDisplay() {
-  document.getElementById('productCount').innerText = productCount;
-  document.getElementById('productionSpeed').innerText = productionSpeed;
-  document.getElementById('upgradeCost').innerText = upgradeCost;
-  document.getElementById('researchPoints').innerText = researchPoints;
+function expandWarehouse() {
+  if (money >= 5000) {
+    money -= 5000;
+    countries++;
+    document.getElementById('countries').innerText = `Current Countries: ${countries}`;
+    updateUI();
+    alert("Warehouse expanded!");
+  } else {
+    alert("Not enough money!");
+  }
 }
 
-// Earn Research Points every 10 seconds (passive)
+function updateUI() {
+  document.getElementById('money').innerText = money.toFixed(2);
+  document.getElementById('productionRate').innerText = (productionRate * automationMultiplier).toFixed(1);
+  document.getElementById('level').innerText = level;
+  document.getElementById('currentProduct').innerText = currentProduct;
+}
+
+// Auto production
 setInterval(() => {
-  researchPoints += 1;
-  updateDisplay();
-}, 10000);
+  money += productionRate * automationMultiplier;
+  updateUI();
+  updateProgressBar();
+}, 1000);
 
-// Start at Factory page
-showPage('factory');
-updateDisplay();
+function updateProgressBar() {
+  let progress = document.getElementById('progress');
+  let width = Math.min((money % 100) * 1, 100);
+  progress.style.width = width + "%";
+}
