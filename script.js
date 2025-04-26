@@ -1,162 +1,96 @@
-let products = ["Paper", "Pencils", "Notebooks", "Phones", "Laptops", "Cars", "Planes", "Satellites", "Rockets", "AI Robots"];
-let productIndex = 0;
+// Game state variables
 let money = 0;
+let points = 0;
+let productionRate = 1;
 let level = 1;
-let productionSpeed = 1;
-let automationMultiplier = 1;
 let progress = 0;
-let managerHired = false;
-let productionInterval;
+let gameInterval;
+let countries = 1;
 
-// Load saved game
-window.onload = function() {
-  if (localStorage.getItem('factorySave')) {
-    let save = JSON.parse(localStorage.getItem('factorySave'));
-    productIndex = save.productIndex;
-    money = save.money;
-    level = save.level;
-    automationMultiplier = save.automationMultiplier;
-    managerHired = save.managerHired;
-  }
+function showPage(page) {
+  const pages = document.querySelectorAll('.page');
+  pages.forEach((pageElement) => {
+    pageElement.classList.remove('active');
+  });
+  document.getElementById(page).classList.add('active');
 }
 
 function startGame() {
-  document.getElementById('mainMenu').classList.add('hidden');
-  document.getElementById('factory').classList.remove('hidden');
-  productionInterval = setInterval(produce, 100);
+  showPage('factory');
+  money = 0;
+  points = 0;
+  productionRate = 1;
+  level = 1;
+  progress = 0;
+  countries = 1;
   updateUI();
 }
 
-function produce() {
-  if (managerHired) {
-    progress += 1 * automationMultiplier;
-  } else {
-    progress += 0.5 * automationMultiplier;
-  }
-
-  if (progress >= 100) {
-    money += 5 * level;
-    progress = 0;
-  }
-
-  updateUI();
-  saveGame();
-}
-
-function tapFactory() {
-  money += 10 * automationMultiplier;
-  playSound('tapSound');
-  showFirework();
-  updateUI();
-  saveGame();
-}
-
-function upgradeProduct() {
-  if (money >= 100 * level) {
-    money -= 100 * level;
-    if (productIndex < products.length - 1) {
-      productIndex++;
-      level++;
-      showMessage("🎉 Upgraded to " + products[productIndex] + "!");
-    } else {
-      level++;
-      showMessage("⭐ Upgraded to Level " + level + "!");
-    }
-    playSound('upgradeSound');
+function upgradeFactory() {
+  if (money >= 100) {
+    money -= 100;
+    productionRate *= 2;
+    level += 1;
     updateUI();
-    saveGame();
   } else {
-    showMessage("❌ Not enough money to upgrade product!");
+    alert('Not enough money!');
   }
 }
 
-function upgradeAutomation() {
-  if (money >= 200 * level) {
-    money -= 200 * level;
-    automationMultiplier += 0.5;
-    showMessage("⚡ Automation Boosted!");
-    playSound('upgradeSound');
+function hireManager(level) {
+  const managerCost = [500, 2000, 5000];
+  const managerSpeed = [0.1, 0.25, 0.5];
+  if (money >= managerCost[level - 1]) {
+    money -= managerCost[level - 1];
+    productionRate += managerSpeed[level - 1];
     updateUI();
-    saveGame();
   } else {
-    showMessage("❌ Not enough money to upgrade automation!");
+    alert('Not enough money!');
   }
 }
 
-function hireManager() {
-  if (!managerHired && money >= 500) {
-    money -= 500;
-    managerHired = true;
-    showMessage("👨‍💼 Manager Hired! Auto Production Started!");
-    playSound('upgradeSound');
+function researchUpgrade() {
+  if (money >= 1000) {
+    money -= 1000;
+    productionRate *= 2;
     updateUI();
-    saveGame();
-  } else if (managerHired) {
-    showMessage("✅ Manager already hired!");
   } else {
-    showMessage("❌ Not enough money to hire a manager!");
+    alert('Not enough money!');
   }
+}
+
+function expandWarehouse() {
+  if (money >= 5000) {
+    money -= 5000;
+    countries += 1;
+    document.getElementById('countries').innerText = `Current Countries: ${countries}`;
+    updateUI();
+  } else {
+    alert('Not enough money!');
+  }
+}
+
+function earnPoints() {
+  points += 1;
+  document.getElementById('points').innerText = points;
 }
 
 function updateUI() {
-  document.getElementById('product').innerText = "Product: " + products[productIndex];
-  document.getElementById('money').innerText = "💰 Money: $" + Math.floor(money);
-  document.getElementById('level').innerText = "📈 Level: " + level;
-  document.getElementById('progressBar').style.width = progress + "%";
+  document.getElementById('money').innerText = money;
+  document.getElementById('productionRate').innerText = productionRate;
+  document.getElementById('level').innerText = level;
+  document.getElementById('progress').style.width = (progress % 100) + '%';
+  document.getElementById('earnInfo').innerText = `Earned Points: ${points}`;
 }
 
-function showMessage(text) {
-  const messageElement = document.getElementById('message');
-  messageElement.innerText = text;
-  setTimeout(() => {
-    messageElement.innerText = "";
-  }, 3000);
+function updateProgress() {
+  progress += productionRate;
+  if (progress >= 100) {
+    money += 10;
+    progress = 0;
+  }
+  updateUI();
 }
 
-function saveGame() {
-  const saveData = {
-    productIndex,
-    money,
-    level,
-    automationMultiplier,
-    managerHired
-  };
-  localStorage.setItem('factorySave', JSON.stringify(saveData));
-}
-
-function playSound(id) {
-  const sound = document.getElementById(id);
-  sound.currentTime = 0;
-  sound.play();
-}
-
-// Fireworks Effect
-const canvas = document.getElementById('fireworkCanvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-let fireworks = [];
-
-function showFirework() {
-  fireworks.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    radius: 0,
-    alpha: 1
-  });
-}
-
-function animateFireworks() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  fireworks.forEach((fw, index) => {
-    ctx.beginPath();
-    ctx.arc(fw.x, fw.y, fw.radius, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${fw.alpha})`;
-    ctx.fill();
-    fw.radius += 2;
-    fw.alpha -= 0.02;
-    if (fw.alpha <= 0) fireworks.splice(index, 1);
-  });
-  requestAnimationFrame(animateFireworks);
-}
-animateFireworks();
+// Automatically increase progress every second
+gameInterval = setInterval(updateProgress, 1000);
