@@ -1,93 +1,162 @@
+let products = ["Paper", "Pencils", "Notebooks", "Phones", "Laptops", "Cars", "Planes", "Satellites", "Rockets", "AI Robots"];
+let productIndex = 0;
 let money = 0;
 let level = 1;
-let productionRate = 1;
-let currentProduct = "Paper";
+let productionSpeed = 1;
 let automationMultiplier = 1;
-let countries = 1;
+let progress = 0;
+let managerHired = false;
+let productionInterval;
 
-const products = ["Paper", "Pencil", "Book", "Phone", "Car", "Rocket"];
-
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(page => {
-    page.classList.add('hidden');
-  });
-  document.getElementById(pageId).classList.remove('hidden');
+// Load saved game
+window.onload = function() {
+  if (localStorage.getItem('factorySave')) {
+    let save = JSON.parse(localStorage.getItem('factorySave'));
+    productIndex = save.productIndex;
+    money = save.money;
+    level = save.level;
+    automationMultiplier = save.automationMultiplier;
+    managerHired = save.managerHired;
+  }
 }
 
 function startGame() {
-  showPage('factory');
+  document.getElementById('mainMenu').classList.add('hidden');
+  document.getElementById('factory').classList.remove('hidden');
+  productionInterval = setInterval(produce, 100);
+  updateUI();
 }
 
-function upgradeFactory() {
-  if (money >= 100) {
-    money -= 100;
-    level++;
-    if (level < products.length) {
-      currentProduct = products[level - 1];
+function produce() {
+  if (managerHired) {
+    progress += 1 * automationMultiplier;
+  } else {
+    progress += 0.5 * automationMultiplier;
+  }
+
+  if (progress >= 100) {
+    money += 5 * level;
+    progress = 0;
+  }
+
+  updateUI();
+  saveGame();
+}
+
+function tapFactory() {
+  money += 10 * automationMultiplier;
+  playSound('tapSound');
+  showFirework();
+  updateUI();
+  saveGame();
+}
+
+function upgradeProduct() {
+  if (money >= 100 * level) {
+    money -= 100 * level;
+    if (productIndex < products.length - 1) {
+      productIndex++;
+      level++;
+      showMessage("🎉 Upgraded to " + products[productIndex] + "!");
+    } else {
+      level++;
+      showMessage("⭐ Upgraded to Level " + level + "!");
     }
-    productionRate += 2;
+    playSound('upgradeSound');
     updateUI();
+    saveGame();
   } else {
-    alert("Not enough money!");
+    showMessage("❌ Not enough money to upgrade product!");
   }
 }
 
-function hireManager(type) {
-  let cost = 0;
-  let boost = 1;
-  if (type === 1) { cost = 500; boost = 1.1; }
-  if (type === 2) { cost = 2000; boost = 1.25; }
-  if (type === 3) { cost = 5000; boost = 1.5; }
-
-  if (money >= cost) {
-    money -= cost;
-    automationMultiplier *= boost;
+function upgradeAutomation() {
+  if (money >= 200 * level) {
+    money -= 200 * level;
+    automationMultiplier += 0.5;
+    showMessage("⚡ Automation Boosted!");
+    playSound('upgradeSound');
     updateUI();
-    alert("Manager hired!");
+    saveGame();
   } else {
-    alert("Not enough money!");
+    showMessage("❌ Not enough money to upgrade automation!");
   }
 }
 
-function researchUpgrade() {
-  if (money >= 1000) {
-    money -= 1000;
-    automationMultiplier *= 2;
+function hireManager() {
+  if (!managerHired && money >= 500) {
+    money -= 500;
+    managerHired = true;
+    showMessage("👨‍💼 Manager Hired! Auto Production Started!");
+    playSound('upgradeSound');
     updateUI();
-    alert("Research Successful!");
+    saveGame();
+  } else if (managerHired) {
+    showMessage("✅ Manager already hired!");
   } else {
-    alert("Not enough money!");
-  }
-}
-
-function expandWarehouse() {
-  if (money >= 5000) {
-    money -= 5000;
-    countries++;
-    document.getElementById('countries').innerText = `Current Countries: ${countries}`;
-    updateUI();
-    alert("Warehouse expanded!");
-  } else {
-    alert("Not enough money!");
+    showMessage("❌ Not enough money to hire a manager!");
   }
 }
 
 function updateUI() {
-  document.getElementById('money').innerText = money.toFixed(2);
-  document.getElementById('productionRate').innerText = (productionRate * automationMultiplier).toFixed(1);
-  document.getElementById('level').innerText = level;
-  document.getElementById('currentProduct').innerText = currentProduct;
+  document.getElementById('product').innerText = "Product: " + products[productIndex];
+  document.getElementById('money').innerText = "💰 Money: $" + Math.floor(money);
+  document.getElementById('level').innerText = "📈 Level: " + level;
+  document.getElementById('progressBar').style.width = progress + "%";
 }
 
-// Auto production
-setInterval(() => {
-  money += productionRate * automationMultiplier;
-  updateUI();
-  updateProgressBar();
-}, 1000);
-
-function updateProgressBar() {
-  let progress = document.getElementById('progress');
-  let width = Math.min((money % 100) * 1, 100);
-  progress.style.width = width + "%";
+function showMessage(text) {
+  const messageElement = document.getElementById('message');
+  messageElement.innerText = text;
+  setTimeout(() => {
+    messageElement.innerText = "";
+  }, 3000);
 }
+
+function saveGame() {
+  const saveData = {
+    productIndex,
+    money,
+    level,
+    automationMultiplier,
+    managerHired
+  };
+  localStorage.setItem('factorySave', JSON.stringify(saveData));
+}
+
+function playSound(id) {
+  const sound = document.getElementById(id);
+  sound.currentTime = 0;
+  sound.play();
+}
+
+// Fireworks Effect
+const canvas = document.getElementById('fireworkCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let fireworks = [];
+
+function showFirework() {
+  fireworks.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    radius: 0,
+    alpha: 1
+  });
+}
+
+function animateFireworks() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  fireworks.forEach((fw, index) => {
+    ctx.beginPath();
+    ctx.arc(fw.x, fw.y, fw.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${fw.alpha})`;
+    ctx.fill();
+    fw.radius += 2;
+    fw.alpha -= 0.02;
+    if (fw.alpha <= 0) fireworks.splice(index, 1);
+  });
+  requestAnimationFrame(animateFireworks);
+}
+animateFireworks();
