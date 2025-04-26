@@ -2,60 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Factory Empire Tycoon</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
+
+  <div id="mainMenu" class="page">
     <h1>🏭 Factory Empire Tycoon</h1>
-    <nav>
-      <button onclick="showPage('home')">Home</button>
-      <button onclick="showPage('factory')">Factory</button>
-      <button onclick="showPage('managers')">Managers</button>
-      <button onclick="showPage('research')">Research</button>
-      <button onclick="showPage('warehouse')">Warehouses</button>
-    </nav>
-  </header>
+    <button onclick="startGame()">Start Game</button>
+  </div>
 
-  <main>
-    <div id="home" class="page">
-      <h2>Welcome Tycoon!</h2>
-      <p>Grow your empire from Paper to Rockets!</p>
-      <button onclick="startGame()">Start New Game</button>
+  <div id="factory" class="page hidden">
+    <h2 id="product">Product: Paper</h2>
+    <p id="money">💰 Money: $0</p>
+    <p id="level">📈 Level: 1</p>
+
+    <div class="progress-container">
+      <div id="progressBar" class="progress-bar"></div>
     </div>
 
-    <div id="factory" class="page hidden">
-      <h2>🏭 Factory Management</h2>
-      <p>Product: <span id="currentProduct">Paper</span></p>
-      <p>Level: <span id="level">1</span></p>
-      <p>Production Rate: <span id="productionRate">1</span>/sec</p>
-      <p>Money: 💵 <span id="money">0</span></p>
-      <div class="progress-bar">
-        <div class="progress" id="progress"></div>
-      </div>
-      <button onclick="upgradeFactory()">Upgrade Factory ($100)</button>
+    <div class="tap-section">
+      <button id="tapButton" onclick="tapFactory()">🚀 Tap to Boost!</button>
     </div>
 
-    <div id="managers" class="page hidden">
-      <h2>👨‍💼 Hire Managers</h2>
-      <button onclick="hireManager(1)">Junior Manager (+10% Speed) - $500</button>
-      <button onclick="hireManager(2)">Senior Manager (+25% Speed) - $2000</button>
-      <button onclick="hireManager(3)">Legendary Manager (+50% Speed) - $5000</button>
+    <div class="buttons-section">
+      <button onclick="upgradeProduct()">🔼 Upgrade Product</button>
+      <button onclick="upgradeAutomation()">⚙️ Upgrade Automation</button>
+      <button onclick="hireManager()">👨‍💼 Hire Manager</button>
     </div>
 
-    <div id="research" class="page hidden">
-      <h2>🔬 Research Center</h2>
-      <button onclick="researchUpgrade()">Upgrade Automation (x2 Speed) - $1000</button>
-    </div>
+    <div id="message"></div>
+  </div>
 
-    <div id="warehouse" class="page hidden">
-      <h2>🌎 Global Warehouses</h2>
-      <button onclick="expandWarehouse()">Expand to New Country - $5000</button>
-      <p id="countries">Current Countries: 1</p>
-    </div>
-  </main>
+  <!-- Firework Canvas -->
+  <canvas id="fireworkCanvas"></canvas>
 
-  <script src="script.js"></script>
+  <audio id="tapSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_65094a0c9f.mp3"></audio>
+  <audio id="upgradeSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_3e18ad569d.mp3"></audio>
+
+<script src="script.js"></script>
 </body>
 </html>
