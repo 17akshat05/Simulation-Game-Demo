@@ -33,11 +33,12 @@ function upgradeFactory() {
 }
 
 function hireManager(type) {
-  let cost = 0;
-  let boost = 1;
-  if (type === 1) { cost = 500; boost = 1.1; }
-  if (type === 2) { cost = 2000; boost = 1.25; }
-  if (type === 3) { cost = 5000; boost = 1.5; }
+  let cost = 50;
+  let boost = 1.5;
+  if (type === 1) { cost = 190; boost = 2; }
+  if (type === 2) { cost = 2000; boost = 5; }
+  if (type === 3) { cost = 10000; boost = 10; }
+   if (type === 4) { cost = 22000; boost = 15; }
 
   if (money >= cost) {
     money -= cost;
@@ -50,8 +51,8 @@ function hireManager(type) {
 }
 
 function researchUpgrade() {
-  if (money >= 1000) {
-    money -= 1000;
+  if (money >= 500) {
+    money -= 500;
     automationMultiplier *= 2;
     updateUI();
     alert("Research Successful!");
@@ -61,8 +62,8 @@ function researchUpgrade() {
 }
 
 function expandWarehouse() {
-  if (money >= 5000) {
-    money -= 5000;
+  if (money >= 50000) {
+    money -= 50000;
     countries++;
     document.getElementById('countries').innerText = `Current Countries: ${countries}`;
     updateUI();
